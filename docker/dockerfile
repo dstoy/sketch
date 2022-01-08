@@ -1,0 +1,69 @@
+FROM ubuntu:20.04
+
+ARG CUID=1000
+ARG CGID=1000
+ARG SHARED
+
+# install required packages
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    sudo \
+    curl \
+    git  \
+    psmisc \
+    apt-transport-https \
+    unzip \
+    tzdata \
+    python3-minimal \
+    mongodb-clients \
+    redis-tools \
+    bash-completion \
+    neovim \
+    lsb-core
+
+
+# add the dev group
+RUN if [ $(getent group $CGID) ]; then \
+    OLD_NAME=$(getent group $CGID | cut -d: -f1); \
+    sudo groupmod --new-name app $OLD_NAME; \
+else \
+    sudo groupadd --gid $CGID app; \
+fi
+
+# add the dev user
+RUN useradd --uid $CUID --gid $CGID -m app
+
+# allow sudo for the app user
+RUN echo "app ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-user
+RUN echo "Set disable_coredump false" > /etc/sudo.conf
+
+# configure timezone
+RUN echo "UTC" > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
+
+# install nodejs
+RUN curl --silent https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+RUN echo "deb http://deb.nodesource.com/node_16.x focal main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN echo "deb-src http://deb.nodesource.com/node_16.x focal main" | tee -a /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update && apt-get install -y nodejs
+
+# install yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarnpkg.list
+RUN apt-get update && apt-get install -y yarn
+
+# expose container ports
+EXPOSE 3000
+
+RUN mkdir /data && chown app:app /data
+VOLUME /data
+
+# initialize the application environment
+USER app
+WORKDIR /app
+
+# install the typescrypt globaly
+RUN sudo npm install -g typescript
+
+# vi: ft=dockerfile

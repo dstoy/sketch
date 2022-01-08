@@ -1,0 +1,39 @@
+{
+    "ts-node": {
+        "require": ["tsconfig-paths/register"],
+        "files": true
+    },
+    "extends": "@tsconfig/svelte/tsconfig.json",
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "lib": ["es6", "dom"],
+        "target": "es2020",
+        "useDefineForClassFields": true,
+        "importHelpers": true,
+        "importsNotUsedAsValues": "remove",
+        "module": "esnext",
+        "resolveJsonModule": true,
+        "declaration": true,
+        "allowJs": true,
+        "checkJs": true,
+        "rootDir": ".",
+        "baseUrl": "./",
+        "outDir": "./dist",
+        "paths": {
+            "sketch/runtime": ["src/runtime"],
+            "sketch/*": ["src/*"],
+            "sketch": ["src"]
+        }
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.js",
+        "src/**/*.svelte",
+        "example/**/*.ts",
+        "example/**/*.d.ts",
+        "example/**/*.js",
+        "example/**/*.svelte",
+        "types/**/*.ts"
+    ]
+}

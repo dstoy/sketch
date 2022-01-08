@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+    app:
+        build:
+            context: $PWD
+            dockerfile: docker/dockerfile
+            args:
+                - SHARED=docker/shared
+                - CUID=$CUID
+                - CGID=$CGID
+
+        environment:
+            - RUNNER=docker
+
+        image: $NAME
+        container_name: $NAME
+        hostname: $NAME
+
+        ports:
+            - "3000:3000"
+
+        volumes:
+            - $PWD:/app
+            - app:/data
+
+        init: true
+        tty: true
+        stdin_open: true
+
+networks:
+    default:
+        name: $NETWORK
+
+volumes:
+    app:

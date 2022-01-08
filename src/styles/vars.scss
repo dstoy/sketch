@@ -1,0 +1,64 @@
+/* ---------------------------------------------------------
+                          Mixins
+ --------------------------------------------------------- */
+// responsive
+$breakpoints: (
+    xs: 576px,
+    sm: 768px,
+    md: 992px,
+    lg: 1200px,
+);
+
+@mixin media-min-width($size) {
+    @if map-has-key($breakpoints, $size) {
+        @media (min-width: map-get($breakpoints, $size)) {
+            @content;
+        }
+    } @else if type-of($size) == "number" {
+        @media (min-width: $size) {
+            @content;
+        }
+    }
+}
+
+@mixin media-max-width($size) {
+    @if map-has-key($breakpoints, $size) {
+        @media (max-width: map-get($breakpoints, $size) - 1px) {
+            @content;
+        }
+    } @else if type-of($size) == "number" {
+        @media (max-width: $size) {
+            @content;
+        }
+    }
+}
+
+@mixin media-min-height($size) {
+    @if map-has-key($breakpoints, $size) {
+        @media (min-height: map-get($breakpoints, $size)) {
+            @content;
+        }
+    } @else if type-of($size) == "number" {
+        @media (min-height: $size) {
+            @content;
+        }
+    }
+}
+
+@mixin media-max-height($size) {
+    @if map-has-key($breakpoints, $size) {
+        @media (max-height: map-get($breakpoints, $size) - 1px) {
+            @content;
+        }
+    } @else if type-of($size) == "number" {
+        @media (max-height: $size) {
+            @content;
+        }
+    }
+}
+
+@mixin reset-font() {
+    font-family: var(--sketch-font-face);
+    font-size: var(--sketch-font-size);
+    color: var(--sketch-font-color);
+}

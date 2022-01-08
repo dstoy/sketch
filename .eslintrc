@@ -1,0 +1,50 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module"
+    },
+    "plugins": ["svelte3", "@typescript-eslint"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "prettier"
+    ],
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "rules": {
+        "node/no-unsupported-features/es-syntax": "off",
+        "linebreak-style": ["error", "unix"],
+        "eqeqeq": [2, "smart"],
+        "no-console": ["warn"],
+        "no-process-env": 0,
+        "curly": [2, "all"],
+        "no-async-promise-executor": 0,
+        "unicorn/new-for-builtins": 0,
+        "allowEmptyCatch": 0,
+        "no-unused-vars": "off",
+        "no-unused-expressions": "off",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-unused-vars": ["warn"],
+        "@typescript-eslint/no-unused-expressions": ["warn"]
+    },
+    "overrides": [
+        {
+            "files": ["*.svelte"],
+            "processor": "svelte3/svelte3"
+        },
+        {
+            "files": ["**/tests/**/*.test.{j,t}s?(x)"],
+            "env": {
+                "jest": true
+            }
+        }
+    ],
+    "settings": {
+        "svelte3/typescript": true,
+        "svelte3/ignore-styles": true
+    }
+}

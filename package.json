@@ -1,0 +1,75 @@
+{
+    "name": "sketch",
+    "version": "0.1.0",
+    "type": "module",
+    "private": true,
+    "files": [
+        "dist",
+        "*.d.ts"
+    ],
+    "main": "./dist/sketch.umd.js",
+    "module": "./dist/sketch.es.js",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/sketch.es.js",
+            "require": "./dist/sketch.umd.js"
+        },
+        "./runtime": {
+            "types": "./dist/runtme.d.ts",
+            "import": "./dist/runtime.es.js",
+            "require": "./dist/runtime.umd.js"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dstoy/sketch"
+    },
+    "scripts": {
+        "start": "cd example && vite --host 0.0.0.0",
+        "serve": "vite preview",
+        "check": "svelte-check --tsconfig ./tsconfig.json",
+        "prettier": "prettier --check '**/*.{css,scss,ts,js,json,svelte}'",
+        "lint": "yarn prettier && yarn run check",
+        "build:lib": "vite build -c build/main.vite.config.ts",
+        "build:runtime": "vite build -c build/runtime.vite.config.ts",
+        "build": "yarn build:lib && yarn build:runtime",
+        "prepare": "husky install"
+    },
+    "dependencies": {
+        "chalk": "^5.0.0",
+        "glob": "^7.2.0",
+        "tslib": "^2.2.0"
+    },
+    "devDependencies": {
+        "@sveltejs/vite-plugin-svelte": "^1.0.0-next.11",
+        "@tsconfig/svelte": "^2.0.1",
+        "@types/glob": "^7.2.0",
+        "@typescript-eslint/eslint-plugin": "^5.4.0",
+        "@typescript-eslint/parser": "^5.4.0",
+        "eslint": "^8.2.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-svelte3": "^3.2.1",
+        "husky": "^7.0.4",
+        "jest": "^27.3.1",
+        "prettier": "^2.4.1",
+        "prettier-plugin-svelte": "^2.5.0",
+        "rollup": "^2.63.0",
+        "sass": "^1.43.4",
+        "svelte": "^3.37.0",
+        "svelte-check": "^2.1.0",
+        "svelte-preprocess": "^4.9.8",
+        "svelte-preprocess-markdown": "^2.7.3",
+        "tsconfig-paths": "^3.12.0",
+        "typescript": "^4.4.4",
+        "vite": "^2.6.4",
+        "vite-plugin-dts": "^0.9.7",
+        "vite-tsconfig-paths": "^3.3.17"
+    },
+    "lint-staged": {
+        "*": [
+            "prettier --check",
+            "svelte-check --tsconfig ./tsconfig.json"
+        ]
+    }
+}
