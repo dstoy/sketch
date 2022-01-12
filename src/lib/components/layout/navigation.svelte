@@ -161,7 +161,7 @@
             {:else}
                 <a
                     href={item.url}
-                    class:active={item.slug === $active.slug}
+                    class:active={item.slug === $active?.slug}
                     on:click|preventDefault={() => onClick(item)}
                     >{item.label}</a
                 >
