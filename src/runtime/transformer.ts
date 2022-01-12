@@ -61,7 +61,7 @@ function process(markup: string, filename: string) {
     if (!pageConfig.name) {
         error(
             "Missing page name. " +
-                "You can use `export const pageName = '....' to provide it.",
+                "You can use `export const sketch = '....' to provide it.",
             filename,
         );
         return markup;
