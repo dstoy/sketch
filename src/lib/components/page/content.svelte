@@ -1,11 +1,30 @@
 <script lang="ts">
+    import { beforeUpdate, onDestroy } from "svelte";
+    import type { SvelteComponentDev } from "svelte/internal";
+
     export let title = undefined;
     export let component = undefined;
+
+    let root: HTMLElement;
+    let mounted: SvelteComponentDev;
+
+    beforeUpdate(() => {
+        if (component && root) {
+            // cleanup the old component
+            mounted?.$destroy();
+
+            // mount the new one
+            mounted = new component({ target: root });
+        }
+    });
+
+    onDestroy(() => {
+        mounted?.$destroy();
+    });
 </script>
 
-<div class="sketch-page">
+<div class="sketch-page" bind:this={root}>
     <div class="page-title">{title}</div>
-    <svelte:component this={component} />
 </div>
 
 <style lang="scss" global>

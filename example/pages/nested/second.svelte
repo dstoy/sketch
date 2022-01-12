@@ -10,3 +10,9 @@
     leo urna. Vel fringilla est ullamcorper eget nulla facilisi. Ullamcorper
     eget nulla facilisi etiam dignissim diam quis enim.
 </p>
+
+<style lang="scss">
+    p {
+        color: red;
+    }
+</style>

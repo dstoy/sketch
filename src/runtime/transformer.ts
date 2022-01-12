@@ -1,14 +1,9 @@
 import { parse, walk } from "svelte/compiler";
-import path from "path";
 import chalk from "chalk";
 import config from "./config";
 
 const NAME_PROP = "sketch";
 const INDEX_PROP = "home";
-const CONTENT_PAGE = path.resolve(
-    __dirname,
-    "../lib/components/page/content.svelte",
-);
 
 /**
  * Extract page configuration from the component
@@ -107,30 +102,6 @@ function process(markup: string, filename: string) {
 }
 
 /**
- * Inject the custom styles into the content page
- */
-function style(markup: string) {
-    if (config.styles.length > 0) {
-        const imports = (config.styles as string[]).map((style) => {
-            const fullPath = path.join(config.root, style);
-            return `@import "${fullPath}";\n`;
-        });
-
-        const reg = /^\s*(<style[\s\S]*?>[\s\S]*?)<\/style>/gim;
-        const styleBlock = reg.exec(markup);
-
-        if (styleBlock) {
-            markup = markup.replace(
-                styleBlock[1],
-                `${styleBlock[1]}\n${imports}\n`,
-            );
-        }
-    }
-
-    return markup;
-}
-
-/**
  * Prints an error message
  */
 function error(message: string, filename: string) {
@@ -149,10 +120,6 @@ export default function transformer() {
         async markup({ content, filename }) {
             if (config.isPage(filename)) {
                 content = process(content, filename);
-            }
-
-            if (filename === CONTENT_PAGE) {
-                content = style(content);
             }
 
             return { code: content };

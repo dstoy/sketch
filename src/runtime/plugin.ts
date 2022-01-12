@@ -2,15 +2,13 @@
  * A vite/rollup plugin for automatically importing all
  * sketch pages into the entry point of the project
  */
-import path from "path";
 import glob from "glob";
 import { PluginOption } from "vite";
 import config from "./config";
 
-const entry = path.resolve(__dirname, "..", "start.ts");
-
 export default function build() {
     let importBlock = "";
+    let entry: string;
 
     return {
         name: "vite-plugin-sketch",
@@ -21,10 +19,12 @@ export default function build() {
          * application entry point
          */
         load(id) {
-            if (id === entry) {
+            if (!entry && !id.includes("node_modules")) {
+                entry = id;
+
                 // Prepare the auto import block
                 config.pages = [];
-                const files = glob.sync(config.path);
+                const files = glob.sync(config.load);
                 const chunks = [];
 
                 chunks.push(

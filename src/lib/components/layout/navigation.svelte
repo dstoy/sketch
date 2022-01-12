@@ -7,7 +7,7 @@
 
     // process the page and build the navigation according to the
     // page labels. If the labels contain / they will be treated as parents
-    let unsubscribe = pages.subscribe(($pages) => {
+    const unsubscribe = pages.subscribe(($pages) => {
         let group: Record<string, MenuItem> = {};
         let $active = get(active);
 
@@ -173,6 +173,7 @@
 <style lang="scss">
     $h-bg: #536579;
     $h-color: white;
+    $text-color: #d1d0d0;
 
     .navigation {
         color: #d1d0d0;

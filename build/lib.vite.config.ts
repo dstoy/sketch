@@ -6,7 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 const resolve = (rel: string) => {
     return path.resolve(__dirname, `/../${rel}`);
-}
+};
 
 export default defineConfig({
     plugins: [
@@ -16,16 +16,20 @@ export default defineConfig({
         }),
     ],
     build: {
+        emptyOutDir: false,
         lib: {
             name: "sketch",
-            entry: resolve("index.html"),
-            fileName: (format: string) => `sketch.${format}.js`,
+            entry: resolve("src/index.ts"),
+            fileName: (format) => `sketch.${format}.js`,
+            formats: ["es", "umd"],
         },
         rollupOptions: {
-            external: ["svelte"],
+            external: ["svelte", "svelte/internal", "svelte/store"],
             output: {
                 globals: {
                     svelte: "svelte",
+                    ["svelte/internal"]: "svelte/internal",
+                    ["svelte/store"]: "svelte/store",
                 },
             },
         },

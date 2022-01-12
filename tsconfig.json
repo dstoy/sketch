@@ -20,9 +20,9 @@
         "baseUrl": "./",
         "outDir": "./dist",
         "paths": {
+            "sketch": ["src"],
             "sketch/runtime": ["src/runtime"],
-            "sketch/*": ["src/*"],
-            "sketch": ["src"]
+            "sketch/*": ["src/*"]
         }
     },
     "include": [

@@ -1,19 +1,14 @@
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { markdown } from "svelte-preprocess-markdown";
+import sveltePreprocess from "svelte-preprocess";
 import tsconfigPaths from "vite-tsconfig-paths";
-import svelteConfig from "../svelte.config";
-import sketch from "../src/runtime";
+import sketch from "sketch/runtime";
 
 // Configure the project
-sketch.configure({
-    root: `${__dirname}`,
-    load: `pages/**/*.{svelte,md}`,
-    styles: ["./styles/main.scss"],
-});
+sketch.configure({ load: `${__dirname}/pages/**/*.{svelte,md}` });
 
 export default defineConfig({
-    root: sketch.lib,
     plugins: [
         tsconfigPaths(),
         sketch.plugin(),
@@ -22,15 +17,15 @@ export default defineConfig({
             extensions: [".svelte", ".md"],
             preprocess: [
                 sketch.transformer(),
-                svelteConfig.preprocess,
+                sveltePreprocess({
+                    typescript: true,
+                    scss: {
+                        renderSync: true,
+                        includePaths: ["pages"],
+                    },
+                }),
                 markdown(),
             ],
         }),
     ],
-    resolve: {
-        alias: {
-            sketch: `${__dirname}/../src`,
-            "~": `${__dirname}/../src`,
-        },
-    },
 });

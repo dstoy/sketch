@@ -2,7 +2,7 @@
     import Navigation from "./navigation.svelte";
     import Page from "../page";
 
-    import { active } from "sketch/router";
+    import { active } from "../../../router";
 </script>
 
 <div class="layout">

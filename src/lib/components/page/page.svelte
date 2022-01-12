@@ -1,6 +1,6 @@
 <script lang="ts">
+    import type { SvelteComponentDev } from "svelte/internal";
     import { beforeUpdate, onDestroy } from "svelte";
-    import { SvelteComponentDev } from "svelte/internal";
     import Content from "./content.svelte";
 
     export let title = undefined;
@@ -13,6 +13,15 @@
      * Handle the iframe onload event
      */
     const onLoad = () => {
+        // clone all styles
+        const head = frame.contentDocument.head;
+        const styles = document.querySelectorAll(
+            'style, link[rel="stylesheet"]',
+        );
+        Array.from(styles).forEach((node) =>
+            head.appendChild(node.cloneNode(true)),
+        );
+
         const target = frame.contentDocument.body;
         content = new Content({
             target,

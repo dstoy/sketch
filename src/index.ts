@@ -5,3 +5,17 @@ export { default as router } from "./router";
 export * from "./lib/components/docs";
 export { default as Scene } from "./lib/components/scene.svelte";
 export { default as Example } from "./lib/components/example.svelte";
+
+import App from "./app.svelte";
+import "./styles/main.scss";
+
+/**
+ * Start the application
+ */
+export function start({ target }: AppParams) {
+    return new App({ target: target });
+}
+
+interface AppParams {
+    target: HTMLElement;
+}
