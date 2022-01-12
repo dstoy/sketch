@@ -17,6 +17,7 @@ export default defineConfig({
     ],
     build: {
         emptyOutDir: false,
+        sourcemap: true,
         lib: {
             name: "sketch",
             entry: resolve("src/index.ts"),

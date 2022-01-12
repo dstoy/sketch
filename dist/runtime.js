@@ -81,7 +81,7 @@ function getPageConfig(markup) {
 function process(markup, filename) {
   const pageConfig = getPageConfig(markup);
   if (!pageConfig.name) {
-    error("Missing page name. You can use `export const pageName = '....' to provide it.", filename);
+    error("Missing page name. You can use `export const sketch = '....' to provide it.", filename);
     return markup;
   }
   const block = `
@@ -139,3 +139,4 @@ var index = {
   transformer
 };
 export { configure, index as default };
+//# sourceMappingURL=runtime.js.map

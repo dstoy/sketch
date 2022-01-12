@@ -493,11 +493,12 @@ function create_else_block(ctx) {
   }
   return {
     c() {
+      var _a;
       a = element("a");
       t = text(t_value);
       attr(a, "href", a_href_value = ctx[7].url);
       attr(a, "class", "svelte-1ssgg69");
-      toggle_class(a, "active", ctx[7].slug === ctx[1].slug);
+      toggle_class(a, "active", ctx[7].slug === ((_a = ctx[1]) == null ? void 0 : _a.slug));
     },
     m(target, anchor) {
       insert(target, a, anchor);
@@ -508,6 +509,7 @@ function create_else_block(ctx) {
       }
     },
     p(new_ctx, dirty) {
+      var _a;
       ctx = new_ctx;
       if (dirty & 1 && t_value !== (t_value = ctx[7].label + ""))
         set_data(t, t_value);
@@ -515,7 +517,7 @@ function create_else_block(ctx) {
         attr(a, "href", a_href_value);
       }
       if (dirty & 3) {
-        toggle_class(a, "active", ctx[7].slug === ctx[1].slug);
+        toggle_class(a, "active", ctx[7].slug === ((_a = ctx[1]) == null ? void 0 : _a.slug));
       }
     },
     d(detaching) {
@@ -1157,3 +1159,4 @@ function start({ target }) {
   return new App({ target });
 }
 export { Docs, Example, Prop, Scene, router, start };
+//# sourceMappingURL=sketch.es.js.map

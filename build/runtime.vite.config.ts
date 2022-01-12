@@ -10,6 +10,7 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     build: {
         emptyOutDir: false,
+        sourcemap: true,
         lib: {
             name: "runtime",
             entry: resolve("src/runtime/index.ts"),
