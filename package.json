@@ -31,6 +31,8 @@
         "build:lib": "vite build -c build/lib.vite.config.ts",
         "build:runtime": "vite build -c build/runtime.vite.config.ts",
         "build": "yarn build:lib && yarn build:runtime",
+        "clean": "rimraf dist/",
+        "release": "yarn lint && yarn clean && yarn build && yarn version --minor",
         "prepare": "husky install"
     },
     "dependencies": {
@@ -52,6 +54,7 @@
         "jest": "^27.3.1",
         "prettier": "^2.4.1",
         "prettier-plugin-svelte": "^2.5.0",
+        "rimraf": "^3.0.2",
         "sketch": "link:./",
         "svelte-check": "^2.1.0",
         "svelte-preprocess-markdown": "^2.7.3",
