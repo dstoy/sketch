@@ -1,1 +1,2 @@
-export { default as default } from "./page.svelte";
+export { default as Content } from "./content.svelte";
+export { default as Page } from "./page.svelte";

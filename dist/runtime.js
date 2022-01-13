@@ -15,7 +15,7 @@ function build() {
     name: "vite-plugin-sketch",
     enforce: "pre",
     load(id) {
-      if (!entry && !id.includes("node_modules")) {
+      if (!entry && id.includes("?entry")) {
         entry = id;
         config.pages = [];
         const files = glob.sync(config.load);

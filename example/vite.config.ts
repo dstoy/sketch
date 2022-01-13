@@ -3,7 +3,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { markdown } from "svelte-preprocess-markdown";
 import sveltePreprocess from "svelte-preprocess";
 import tsconfigPaths from "vite-tsconfig-paths";
-import sketch from "sketch/runtime";
+import sketch from "../src/runtime";
 
 // Configure the project
 sketch.configure({ load: `${__dirname}/pages/**/*.{svelte,md}` });
@@ -28,4 +28,9 @@ export default defineConfig({
             ],
         }),
     ],
+    resolve: {
+        alias: {
+            sketch: `${__dirname}/../src/`,
+        },
+    },
 });

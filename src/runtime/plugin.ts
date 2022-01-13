@@ -19,7 +19,7 @@ export default function build() {
          * application entry point
          */
         load(id) {
-            if (!entry && !id.includes("node_modules")) {
+            if (!entry && id.includes("?entry")) {
                 entry = id;
 
                 // Prepare the auto import block

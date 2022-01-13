@@ -7,13 +7,21 @@ export const pages = writable<PageConfig[]>([]);
 export const active = writable<PageConfig | undefined>(undefined);
 export const params = writable<QueryParam>({});
 
-// Determine the current page from the url
-parse(window.location);
-
-// Handle the url change and process the url on update
-window.addEventListener("popstate", () => {
+if (window.top === window) {
+    // Determine the current page from the url
     parse(window.location);
-});
+
+    // Handle the url change and process the url on update
+    window.addEventListener("popstate", () => {
+        parse(window.location);
+    });
+
+    // Handle the page add event
+    window.addEventListener("registerPage", (e: CustomEvent) => {
+        const { module, config } = e.detail;
+        addPage(module, config);
+    });
+}
 
 // Handle page reload events
 if (import.meta.hot) {
@@ -98,7 +106,13 @@ export async function register(module: PageModule) {
         added[file] = name;
 
         // Add the page to the list
-        addPage(module.default, config);
+        const event = new CustomEvent("registerPage", {
+            detail: {
+                module: module.default,
+                config,
+            },
+        });
+        window.top.dispatchEvent(event);
     }
 }
 

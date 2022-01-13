@@ -6,7 +6,7 @@
 
 <h2>Subtitle</h2>
 
-<p>
+<p class="test">
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Convallis posuere morbi
     leo urna. Vel fringilla est ullamcorper eget nulla facilisi. Ullamcorper
@@ -36,3 +36,9 @@
 
 <Example>Example 1</Example>
 <Example>Example 2</Example>
+
+<style lang="scss">
+    .test {
+        color: red !important;
+    }
+</style>

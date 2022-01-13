@@ -1,8 +1,6 @@
 <script lang="ts">
     import Navigation from "./navigation.svelte";
-    import Page from "../page";
-
-    import { active } from "../../../router";
+    import { Content } from "../page";
 </script>
 
 <div class="layout">
@@ -11,9 +9,7 @@
             <Navigation />
         </div>
         <div class="content">
-            {#if $active}
-                <Page title={$active.title} component={$active.component} />
-            {/if}
+            <Content />
         </div>
     </div>
 </div>

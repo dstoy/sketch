@@ -18,25 +18,31 @@ var __spreadValues = (a, b) => {
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 import { writable, get } from "svelte/store";
-import { SvelteComponent, init, safe_not_equal, element, text, space, attr, insert, append, set_data, detach, create_slot, update_slot_base, get_all_dirty_from_scope, get_slot_changes, transition_in, transition_out, destroy_each, component_subscribe, assign, exclude_internal_props, binding_callbacks, empty, noop, toggle_class, listen, prevent_default, create_component, mount_component, destroy_component, group_outros, check_outros } from "svelte/internal";
+import { SvelteComponent, init, safe_not_equal, element, text, space, attr, insert, append, set_data, detach, create_slot, update_slot_base, get_all_dirty_from_scope, get_slot_changes, transition_in, transition_out, destroy_each, component_subscribe, assign, exclude_internal_props, binding_callbacks, toggle_class, src_url_equal, noop, empty, listen, prevent_default, create_component, mount_component, destroy_component } from "svelte/internal";
 import { beforeUpdate, onDestroy } from "svelte";
 const added = {};
 const pages = writable([]);
 const active = writable(void 0);
 const params = writable({});
-parse(window.location);
-window.addEventListener("popstate", () => {
+if (window.top === window) {
   parse(window.location);
-});
+  window.addEventListener("popstate", () => {
+    parse(window.location);
+  });
+  window.addEventListener("registerPage", (e) => {
+    const { module, config } = e.detail;
+    addPage(module, config);
+  });
+}
 function parse(location) {
   const href = location.hash.replace("#", "");
   const parts = href.split("?");
   const slug = parts[0];
-  const page = get(pages).find((page2) => page2.slug === slug);
-  if (!page) {
+  const page2 = get(pages).find((page22) => page22.slug === slug);
+  if (!page2) {
     return;
   }
-  active.set(__spreadValues({}, page));
+  active.set(__spreadValues({}, page2));
   const _params = {};
   if (parts.length > 1) {
     const values = parts[1].split("&");
@@ -56,7 +62,7 @@ function parse(location) {
   }
   params.set(_params);
 }
-async function load(slug) {
+async function load$1(slug) {
   window.location.hash = slug;
 }
 async function register(module) {
@@ -69,26 +75,32 @@ async function register(module) {
       return;
     }
     added[file] = name;
-    addPage(module.default, config);
+    const event = new CustomEvent("registerPage", {
+      detail: {
+        module: module.default,
+        config
+      }
+    });
+    window.top.dispatchEvent(event);
   }
 }
-async function addPage(component, setup) {
-  const config = getPageConfig(setup);
-  const page = __spreadProps(__spreadValues({}, config), {
+async function addPage(component, setup2) {
+  const config = getPageConfig(setup2);
+  const page2 = __spreadProps(__spreadValues({}, config), {
     component
   });
   pages.update((list) => {
-    return [...list, page];
+    return [...list, page2];
   });
   parse(window.location);
   const $active = get(active);
-  if (!$active && setup.home) {
-    active.set(__spreadValues({}, page));
+  if (!$active && setup2.home) {
+    active.set(__spreadValues({}, page2));
   }
 }
-function getPageConfig(setup) {
-  const file = setup.file;
-  const name = setup.name;
+function getPageConfig(setup2) {
+  const file = setup2.file;
+  const name = setup2.name;
   const slug = name.toLowerCase().replace(/\W+/gi, "-");
   const parts = name.split("/");
   const title = parts[parts.length - 1];
@@ -100,7 +112,7 @@ function getPageConfig(setup) {
   };
 }
 var router = {
-  load,
+  load: load$1,
   pages,
   active,
   register
@@ -302,7 +314,7 @@ function create_fragment$7(ctx) {
     }
   };
 }
-function instance$6($$self, $$props, $$invalidate) {
+function instance$5($$self, $$props, $$invalidate) {
   let $props;
   component_subscribe($$self, props, ($$value) => $$invalidate(0, $props = $$value));
   let { $$slots: slots = {}, $$scope } = $$props;
@@ -315,7 +327,7 @@ function instance$6($$self, $$props, $$invalidate) {
 class Docs extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$6, create_fragment$7, safe_not_equal, {});
+    init(this, options, instance$5, create_fragment$7, safe_not_equal, {});
   }
 }
 var prop_svelte_svelte_type_style_lang = "";
@@ -365,7 +377,7 @@ function create_fragment$6(ctx) {
     }
   };
 }
-function instance$5($$self, $$props, $$invalidate) {
+function instance$4($$self, $$props, $$invalidate) {
   let { $$slots: slots = {}, $$scope } = $$props;
   let { name } = $$props;
   let { type = "string" } = $$props;
@@ -402,7 +414,7 @@ function instance$5($$self, $$props, $$invalidate) {
 class Prop extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$5, create_fragment$6, safe_not_equal, { name: 1, type: 2 });
+    init(this, options, instance$4, create_fragment$6, safe_not_equal, { name: 1, type: 2 });
   }
 }
 class Scene extends SvelteComponent {
@@ -415,14 +427,15 @@ var example_svelte_svelte_type_style_lang = "";
 function create_fragment$5(ctx) {
   let div;
   let current;
-  const default_slot_template = ctx[1].default;
-  const default_slot = create_slot(default_slot_template, ctx, ctx[0], null);
+  const default_slot_template = ctx[2].default;
+  const default_slot = create_slot(default_slot_template, ctx, ctx[1], null);
   return {
     c() {
       div = element("div");
       if (default_slot)
         default_slot.c();
-      attr(div, "class", "sketch svelte-a5p7a0");
+      attr(div, "class", "example svelte-1vvm3e9");
+      toggle_class(div, "centered", ctx[0]);
     },
     m(target, anchor) {
       insert(target, div, anchor);
@@ -433,9 +446,12 @@ function create_fragment$5(ctx) {
     },
     p(ctx2, [dirty]) {
       if (default_slot) {
-        if (default_slot.p && (!current || dirty & 1)) {
-          update_slot_base(default_slot, default_slot_template, ctx2, ctx2[0], !current ? get_all_dirty_from_scope(ctx2[0]) : get_slot_changes(default_slot_template, ctx2[0], dirty, null), null);
+        if (default_slot.p && (!current || dirty & 2)) {
+          update_slot_base(default_slot, default_slot_template, ctx2, ctx2[1], !current ? get_all_dirty_from_scope(ctx2[1]) : get_slot_changes(default_slot_template, ctx2[1], dirty, null), null);
         }
+      }
+      if (dirty & 1) {
+        toggle_class(div, "centered", ctx2[0]);
       }
     },
     i(local) {
@@ -456,20 +472,186 @@ function create_fragment$5(ctx) {
     }
   };
 }
-function instance$4($$self, $$props, $$invalidate) {
+function instance$3($$self, $$props, $$invalidate) {
   let { $$slots: slots = {}, $$scope } = $$props;
+  let { center = true } = $$props;
   $$self.$$set = ($$props2) => {
+    if ("center" in $$props2)
+      $$invalidate(0, center = $$props2.center);
     if ("$$scope" in $$props2)
-      $$invalidate(0, $$scope = $$props2.$$scope);
+      $$invalidate(1, $$scope = $$props2.$$scope);
   };
-  return [$$scope, slots];
+  return [center, $$scope, slots];
 }
 class Example extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$4, create_fragment$5, safe_not_equal, {});
+    init(this, options, instance$3, create_fragment$5, safe_not_equal, { center: 0 });
   }
 }
+var content_svelte_svelte_type_style_lang = "";
+function create_fragment$4(ctx) {
+  let iframe;
+  let iframe_src_value;
+  return {
+    c() {
+      iframe = element("iframe");
+      attr(iframe, "title", "page-frame");
+      attr(iframe, "frameborder", "0");
+      attr(iframe, "width", "100");
+      if (!src_url_equal(iframe.src, iframe_src_value = "page.html"))
+        attr(iframe, "src", iframe_src_value);
+      attr(iframe, "class", "svelte-1oftune");
+    },
+    m(target, anchor) {
+      insert(target, iframe, anchor);
+    },
+    p: noop,
+    i: noop,
+    o: noop,
+    d(detaching) {
+      if (detaching)
+        detach(iframe);
+    }
+  };
+}
+function instance$2($$self) {
+  page.setup(active);
+  return [];
+}
+class Content extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(this, options, instance$2, create_fragment$4, safe_not_equal, {});
+  }
+}
+var page_svelte_svelte_type_style_lang = "";
+function create_if_block$1(ctx) {
+  let div;
+  let t;
+  return {
+    c() {
+      div = element("div");
+      t = text(ctx[0]);
+      attr(div, "class", "page-title");
+    },
+    m(target, anchor) {
+      insert(target, div, anchor);
+      append(div, t);
+    },
+    p(ctx2, dirty) {
+      if (dirty & 1)
+        set_data(t, ctx2[0]);
+    },
+    d(detaching) {
+      if (detaching)
+        detach(div);
+    }
+  };
+}
+function create_fragment$3(ctx) {
+  let div;
+  let if_block = ctx[0] && ctx[1] && create_if_block$1(ctx);
+  return {
+    c() {
+      div = element("div");
+      if (if_block)
+        if_block.c();
+      attr(div, "class", "sketch-page");
+    },
+    m(target, anchor) {
+      insert(target, div, anchor);
+      if (if_block)
+        if_block.m(div, null);
+      ctx[3](div);
+    },
+    p(ctx2, [dirty]) {
+      if (ctx2[0] && ctx2[1]) {
+        if (if_block) {
+          if_block.p(ctx2, dirty);
+        } else {
+          if_block = create_if_block$1(ctx2);
+          if_block.c();
+          if_block.m(div, null);
+        }
+      } else if (if_block) {
+        if_block.d(1);
+        if_block = null;
+      }
+    },
+    i: noop,
+    o: noop,
+    d(detaching) {
+      if (detaching)
+        detach(div);
+      if (if_block)
+        if_block.d();
+      ctx[3](null);
+    }
+  };
+}
+function instance$1($$self, $$props, $$invalidate) {
+  let { title = void 0 } = $$props;
+  let { page: page2 = void 0 } = $$props;
+  let root;
+  let mounted;
+  beforeUpdate(() => {
+    if (page2 && root) {
+      mounted == null ? void 0 : mounted.$destroy();
+      document.body.scrollTop = 0;
+      mounted = new page2({ target: root });
+    }
+  });
+  onDestroy(() => {
+    mounted == null ? void 0 : mounted.$destroy();
+  });
+  function div_binding($$value) {
+    binding_callbacks[$$value ? "unshift" : "push"](() => {
+      root = $$value;
+      $$invalidate(2, root);
+    });
+  }
+  $$self.$$set = ($$props2) => {
+    if ("title" in $$props2)
+      $$invalidate(0, title = $$props2.title);
+    if ("page" in $$props2)
+      $$invalidate(1, page2 = $$props2.page);
+  };
+  return [title, page2, root, div_binding];
+}
+class Page extends SvelteComponent {
+  constructor(options) {
+    super();
+    init(this, options, instance$1, create_fragment$3, safe_not_equal, { title: 0, page: 1 });
+  }
+}
+function load() {
+  const active2 = window.top.$$sketch.store;
+  const $active = get(active2);
+  const target = document.body;
+  const page2 = new Page({
+    target,
+    props: {
+      title: $active == null ? void 0 : $active.title,
+      page: $active == null ? void 0 : $active.component
+    }
+  });
+  active2.subscribe(($active2) => {
+    page2.$set({
+      title: $active2 == null ? void 0 : $active2.title,
+      page: $active2 == null ? void 0 : $active2.component
+    });
+  });
+}
+function setup(active2) {
+  window.$$sketch = {
+    store: active2
+  };
+}
+var page = {
+  load,
+  setup
+};
 var navigation_svelte_svelte_type_style_lang = "";
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
@@ -528,7 +710,7 @@ function create_else_block(ctx) {
     }
   };
 }
-function create_if_block$1(ctx) {
+function create_if_block(ctx) {
   let div2;
   let div0;
   let em;
@@ -667,7 +849,7 @@ function create_each_block(ctx) {
   let if_block_anchor;
   function select_block_type(ctx2, dirty) {
     if (ctx2[7].group)
-      return create_if_block$1;
+      return create_if_block;
     return create_else_block;
   }
   let current_block_type = select_block_type(ctx);
@@ -700,7 +882,7 @@ function create_each_block(ctx) {
     }
   };
 }
-function create_fragment$4(ctx) {
+function create_fragment$2(ctx) {
   let div2;
   let div0;
   let t2;
@@ -779,7 +961,7 @@ function create_fragment$4(ctx) {
     }
   };
 }
-function instance$3($$self, $$props, $$invalidate) {
+function instance($$self, $$props, $$invalidate) {
   let $active;
   component_subscribe($$self, active, ($$value) => $$invalidate(1, $active = $$value));
   let menu = [];
@@ -787,9 +969,9 @@ function instance$3($$self, $$props, $$invalidate) {
     let group = {};
     let $active2 = get(active);
     let _menu = [];
-    $pages.map((page) => {
+    $pages.map((page2) => {
       let target = _menu;
-      let parts = page.name.split("/");
+      let parts = page2.name.split("/");
       if (parts.length > 1) {
         let label2 = parts[0];
         let parent = group[label2];
@@ -799,13 +981,13 @@ function instance$3($$self, $$props, $$invalidate) {
           group[label2] = parent;
         }
         target = parent.children;
-        if (page.slug === ($active2 == null ? void 0 : $active2.slug)) {
+        if (page2.slug === ($active2 == null ? void 0 : $active2.slug)) {
           parent.opened = true;
         }
       }
       let label = parts[parts.length - 1];
-      const url = `#${page.slug}`;
-      const item = { slug: page.slug, label, url };
+      const url = `#${page2.slug}`;
+      const item = { slug: page2.slug, label, url };
       target.push(item);
     });
     _menu = _menu.sort((a, b) => {
@@ -836,7 +1018,7 @@ function instance$3($$self, $$props, $$invalidate) {
       item.opened = !item.opened;
       $$invalidate(0, menu = [...menu]);
     } else {
-      load(item.slug);
+      load$1(item.slug);
     }
   };
   const click_handler = (item) => onClick(item);
@@ -847,190 +1029,10 @@ function instance$3($$self, $$props, $$invalidate) {
 class Navigation extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance$3, create_fragment$4, safe_not_equal, {});
-  }
-}
-var content_svelte_svelte_type_style_lang = "";
-function create_fragment$3(ctx) {
-  let div1;
-  let div0;
-  let t;
-  return {
-    c() {
-      div1 = element("div");
-      div0 = element("div");
-      t = text(ctx[0]);
-      attr(div0, "class", "page-title");
-      attr(div1, "class", "sketch-page");
-    },
-    m(target, anchor) {
-      insert(target, div1, anchor);
-      append(div1, div0);
-      append(div0, t);
-      ctx[3](div1);
-    },
-    p(ctx2, [dirty]) {
-      if (dirty & 1)
-        set_data(t, ctx2[0]);
-    },
-    i: noop,
-    o: noop,
-    d(detaching) {
-      if (detaching)
-        detach(div1);
-      ctx[3](null);
-    }
-  };
-}
-function instance$2($$self, $$props, $$invalidate) {
-  let { title = void 0 } = $$props;
-  let { component = void 0 } = $$props;
-  let root;
-  let mounted;
-  beforeUpdate(() => {
-    if (component && root) {
-      mounted == null ? void 0 : mounted.$destroy();
-      mounted = new component({ target: root });
-    }
-  });
-  onDestroy(() => {
-    mounted == null ? void 0 : mounted.$destroy();
-  });
-  function div1_binding($$value) {
-    binding_callbacks[$$value ? "unshift" : "push"](() => {
-      root = $$value;
-      $$invalidate(1, root);
-    });
-  }
-  $$self.$$set = ($$props2) => {
-    if ("title" in $$props2)
-      $$invalidate(0, title = $$props2.title);
-    if ("component" in $$props2)
-      $$invalidate(2, component = $$props2.component);
-  };
-  return [title, root, component, div1_binding];
-}
-class Content extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(this, options, instance$2, create_fragment$3, safe_not_equal, { title: 0, component: 2 });
-  }
-}
-var page_svelte_svelte_type_style_lang = "";
-function create_fragment$2(ctx) {
-  let iframe;
-  let mounted;
-  let dispose;
-  return {
-    c() {
-      iframe = element("iframe");
-      attr(iframe, "title", "page-frame");
-      attr(iframe, "frameborder", "0");
-      attr(iframe, "width", "100");
-      attr(iframe, "class", "svelte-1oftune");
-    },
-    m(target, anchor) {
-      insert(target, iframe, anchor);
-      ctx[4](iframe);
-      if (!mounted) {
-        dispose = listen(iframe, "load", ctx[1]);
-        mounted = true;
-      }
-    },
-    p: noop,
-    i: noop,
-    o: noop,
-    d(detaching) {
-      if (detaching)
-        detach(iframe);
-      ctx[4](null);
-      mounted = false;
-      dispose();
-    }
-  };
-}
-function instance$1($$self, $$props, $$invalidate) {
-  let { title = void 0 } = $$props;
-  let { component = void 0 } = $$props;
-  let frame = void 0;
-  let content;
-  const onLoad = () => {
-    const head = frame.contentDocument.head;
-    const styles = document.querySelectorAll('style, link[rel="stylesheet"]');
-    Array.from(styles).forEach((node) => head.appendChild(node.cloneNode(true)));
-    const target = frame.contentDocument.body;
-    content = new Content({ target, props: { component, title } });
-  };
-  onDestroy(() => {
-    content == null ? void 0 : content.$destroy();
-  });
-  beforeUpdate(() => {
-    if (frame) {
-      $$invalidate(0, frame.contentDocument.body.scrollTop = 0, frame);
-    }
-    content == null ? void 0 : content.$$set({ title, component });
-  });
-  function iframe_binding($$value) {
-    binding_callbacks[$$value ? "unshift" : "push"](() => {
-      frame = $$value;
-      $$invalidate(0, frame);
-    });
-  }
-  $$self.$$set = ($$props2) => {
-    if ("title" in $$props2)
-      $$invalidate(2, title = $$props2.title);
-    if ("component" in $$props2)
-      $$invalidate(3, component = $$props2.component);
-  };
-  return [frame, onLoad, title, component, iframe_binding];
-}
-class Page extends SvelteComponent {
-  constructor(options) {
-    super();
-    init(this, options, instance$1, create_fragment$2, safe_not_equal, { title: 2, component: 3 });
+    init(this, options, instance, create_fragment$2, safe_not_equal, {});
   }
 }
 var layout_svelte_svelte_type_style_lang = "";
-function create_if_block(ctx) {
-  let page;
-  let current;
-  page = new Page({
-    props: {
-      title: ctx[0].title,
-      component: ctx[0].component
-    }
-  });
-  return {
-    c() {
-      create_component(page.$$.fragment);
-    },
-    m(target, anchor) {
-      mount_component(page, target, anchor);
-      current = true;
-    },
-    p(ctx2, dirty) {
-      const page_changes = {};
-      if (dirty & 1)
-        page_changes.title = ctx2[0].title;
-      if (dirty & 1)
-        page_changes.component = ctx2[0].component;
-      page.$set(page_changes);
-    },
-    i(local) {
-      if (current)
-        return;
-      transition_in(page.$$.fragment, local);
-      current = true;
-    },
-    o(local) {
-      transition_out(page.$$.fragment, local);
-      current = false;
-    },
-    d(detaching) {
-      destroy_component(page, detaching);
-    }
-  };
-}
 function create_fragment$1(ctx) {
   let div3;
   let div2;
@@ -1038,9 +1040,10 @@ function create_fragment$1(ctx) {
   let navigation;
   let t;
   let div1;
+  let content;
   let current;
   navigation = new Navigation({});
-  let if_block = ctx[0] && create_if_block(ctx);
+  content = new Content({});
   return {
     c() {
       div3 = element("div");
@@ -1049,8 +1052,7 @@ function create_fragment$1(ctx) {
       create_component(navigation.$$.fragment);
       t = space();
       div1 = element("div");
-      if (if_block)
-        if_block.c();
+      create_component(content.$$.fragment);
       attr(div0, "class", "navigation svelte-eu3h6w");
       attr(div1, "class", "content svelte-eu3h6w");
       attr(div2, "class", "wrapper svelte-eu3h6w");
@@ -1063,61 +1065,34 @@ function create_fragment$1(ctx) {
       mount_component(navigation, div0, null);
       append(div2, t);
       append(div2, div1);
-      if (if_block)
-        if_block.m(div1, null);
+      mount_component(content, div1, null);
       current = true;
     },
-    p(ctx2, [dirty]) {
-      if (ctx2[0]) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-          if (dirty & 1) {
-            transition_in(if_block, 1);
-          }
-        } else {
-          if_block = create_if_block(ctx2);
-          if_block.c();
-          transition_in(if_block, 1);
-          if_block.m(div1, null);
-        }
-      } else if (if_block) {
-        group_outros();
-        transition_out(if_block, 1, 1, () => {
-          if_block = null;
-        });
-        check_outros();
-      }
-    },
+    p: noop,
     i(local) {
       if (current)
         return;
       transition_in(navigation.$$.fragment, local);
-      transition_in(if_block);
+      transition_in(content.$$.fragment, local);
       current = true;
     },
     o(local) {
       transition_out(navigation.$$.fragment, local);
-      transition_out(if_block);
+      transition_out(content.$$.fragment, local);
       current = false;
     },
     d(detaching) {
       if (detaching)
         detach(div3);
       destroy_component(navigation);
-      if (if_block)
-        if_block.d();
+      destroy_component(content);
     }
   };
-}
-function instance($$self, $$props, $$invalidate) {
-  let $active;
-  component_subscribe($$self, active, ($$value) => $$invalidate(0, $active = $$value));
-  return [$active];
 }
 class Layout extends SvelteComponent {
   constructor(options) {
     super();
-    init(this, options, instance, create_fragment$1, safe_not_equal, {});
+    init(this, options, null, create_fragment$1, safe_not_equal, {});
   }
 }
 function create_fragment(ctx) {
@@ -1158,5 +1133,5 @@ var main = "";
 function start({ target }) {
   return new App({ target });
 }
-export { Docs, Example, Prop, Scene, router, start };
+export { Docs, Example, Prop, Scene, page, router, start };
 //# sourceMappingURL=sketch.es.js.map
