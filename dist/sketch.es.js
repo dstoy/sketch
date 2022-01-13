@@ -527,25 +527,38 @@ class Content extends SvelteComponent {
 }
 var page_svelte_svelte_type_style_lang = "";
 function create_if_block$1(ctx) {
-  let div;
-  let t;
+  let div0;
+  let t0;
+  let t1;
+  let div1;
   return {
     c() {
-      div = element("div");
-      t = text(ctx[0]);
-      attr(div, "class", "page-title");
+      div0 = element("div");
+      t0 = text(ctx[0]);
+      t1 = space();
+      div1 = element("div");
+      attr(div0, "class", "page-title");
+      attr(div1, "class", "page-content");
     },
     m(target, anchor) {
-      insert(target, div, anchor);
-      append(div, t);
+      insert(target, div0, anchor);
+      append(div0, t0);
+      insert(target, t1, anchor);
+      insert(target, div1, anchor);
+      ctx[3](div1);
     },
     p(ctx2, dirty) {
       if (dirty & 1)
-        set_data(t, ctx2[0]);
+        set_data(t0, ctx2[0]);
     },
     d(detaching) {
       if (detaching)
-        detach(div);
+        detach(div0);
+      if (detaching)
+        detach(t1);
+      if (detaching)
+        detach(div1);
+      ctx[3](null);
     }
   };
 }
@@ -563,7 +576,6 @@ function create_fragment$3(ctx) {
       insert(target, div, anchor);
       if (if_block)
         if_block.m(div, null);
-      ctx[3](div);
     },
     p(ctx2, [dirty]) {
       if (ctx2[0] && ctx2[1]) {
@@ -586,7 +598,6 @@ function create_fragment$3(ctx) {
         detach(div);
       if (if_block)
         if_block.d();
-      ctx[3](null);
     }
   };
 }
@@ -605,7 +616,7 @@ function instance$1($$self, $$props, $$invalidate) {
   onDestroy(() => {
     mounted == null ? void 0 : mounted.$destroy();
   });
-  function div_binding($$value) {
+  function div1_binding($$value) {
     binding_callbacks[$$value ? "unshift" : "push"](() => {
       root = $$value;
       $$invalidate(2, root);
@@ -617,7 +628,7 @@ function instance$1($$self, $$props, $$invalidate) {
     if ("page" in $$props2)
       $$invalidate(1, page2 = $$props2.page);
   };
-  return [title, page2, root, div_binding];
+  return [title, page2, root, div1_binding];
 }
 class Page extends SvelteComponent {
   constructor(options) {

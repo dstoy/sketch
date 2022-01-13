@@ -26,9 +26,10 @@
     });
 </script>
 
-<div class="sketch-page" bind:this={root}>
+<div class="sketch-page">
     {#if title && page}
         <div class="page-title">{title}</div>
+        <div class="page-content" bind:this={root} />
     {/if}
 </div>
 
