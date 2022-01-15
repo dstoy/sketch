@@ -1,6 +1,9 @@
 <script lang="ts">
-    import { beforeUpdate, onDestroy } from "svelte";
-    import { addSlot, removeSlot } from "./store";
+    import { beforeUpdate, getContext, onDestroy } from "svelte";
+    import { DocsStoreApi } from "./store";
+
+    const store = getContext<DocsStoreApi>("docs");
+    const { addSlot, removeSlot } = store;
 
     export let name: string;
 

@@ -1,7 +1,18 @@
 <script lang="ts">
-    import { props, slots, events } from "./store";
+    import { setContext } from "svelte";
+    import { createStore } from "./store";
+
+    const store = createStore();
+    const { props, slots, events } = store;
+
+    setContext("docs", store);
+
+    export let title: string = undefined;
 </script>
 
+{#if title}
+    <h2>{title}</h2>
+{/if}
 <div class="docs">
     {#if $props.length > 0}
         <div class="title">Props</div>
