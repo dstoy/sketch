@@ -1,8 +1,13 @@
 <script lang="ts">
     export let center: boolean = true;
+    export let vertical: boolean = false;
+    export let title: string = undefined;
 </script>
 
-<div class="example" class:centered={center}>
+{#if title}
+    <h2>{title}</h2>
+{/if}
+<div class="example" class:centered={center} class:vertical>
     <slot />
 </div>
 
@@ -20,6 +25,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        &.vertical {
+            flex-direction: column;
+
+            & > :global(*) {
+                margin-bottom: 20px;
+                margin-right: 0;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        & > :global(*) {
+            margin-right: 20px;
+
+            &:last-child {
+                margin-right: 0;
+            }
         }
     }
 </style>

@@ -34,8 +34,8 @@
 </div>
 
 <style lang="scss" global>
-    @import "../../../styles/main.scss";
-    @import "../../../styles/vars.scss";
+    @import "styles/main.scss";
+    @import "styles/vars.scss";
 
     .sketch-page {
         padding: 20px 40px;
@@ -48,7 +48,7 @@
         right: 0;
         overflow: auto;
 
-        & > *:not(.example):not(.scene) {
+        & > .page-content > *:not(.example):not(.scene):not(.docs) {
             &,
             * {
                 @include reset-font();
@@ -108,7 +108,7 @@
             margin-bottom: 20px;
         }
 
-        & > h2 {
+        & > .page-content > h2 {
             color: black;
             font-weight: bolder;
             border-bottom: 1px solid #cacaca;

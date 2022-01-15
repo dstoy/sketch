@@ -1,34 +1,31 @@
 <script lang="ts">
     import { beforeUpdate, onDestroy } from "svelte";
-    import { addProp, removeProp } from "./store";
+    import { addEvent, removeEvent } from "./store";
 
     export let name: string;
-    export let type: string = "string";
 
-    let defaultValue = $$props["default"];
     let content: HTMLElement;
     let registered = false;
 
     beforeUpdate(() => {
         if (content && !registered) {
             const description = content.innerHTML;
-            addProp({ name, type, defaultValue, description });
-
+            addEvent({ name, description });
             registered = true;
         }
     });
 
     onDestroy(() => {
-        removeProp(name);
+        removeEvent(name);
     });
 </script>
 
-<div class="props" bind:this={content}>
+<div class="events" bind:this={content}>
     <slot />
 </div>
 
 <style lang="scss">
-    .props {
+    .events {
         display: none;
     }
 </style>

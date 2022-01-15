@@ -21,7 +21,7 @@ export default defineConfig({
                     typescript: true,
                     scss: {
                         renderSync: true,
-                        includePaths: ["pages"],
+                        includePaths: ["src"],
                     },
                 }),
                 markdown(),
