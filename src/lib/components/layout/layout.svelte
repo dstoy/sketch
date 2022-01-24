@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Navigation from "./navigation.svelte";
+    import Navigation from "./navigation/navigation.svelte";
     import { Content } from "../page";
 </script>
 
@@ -15,6 +15,8 @@
 </div>
 
 <style lang="scss">
+    @import "styles/vars.scss";
+
     .layout {
         height: 100vh;
         width: 100vw;
@@ -29,14 +31,6 @@
             width: 100%;
             box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.3);
             position: relative;
-
-            & > .navigation {
-                width: 260px;
-                height: 100%;
-                overflow: auto;
-                background: #22344a;
-                box-shadow: 1px 0px 6px 2px rgba(0, 0, 0, 0.3);
-            }
 
             & > .content {
                 flex: 1;

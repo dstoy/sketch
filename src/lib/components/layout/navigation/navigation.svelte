@@ -1,7 +1,8 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import { pages, active, load } from "../../../router";
+    import { pages, active, load } from "../../../../router";
+    import state from "./store";
 
     let menu: MenuItem[] = [];
 
@@ -89,6 +90,11 @@
             menu = [...menu];
         } else {
             load(item.slug);
+
+            let $state = get(state);
+            if ($state.opened) {
+                state.hide();
+            }
         }
     };
 
@@ -102,21 +108,23 @@
     }
 </script>
 
-<div class="navigation">
-    <div class="head">
-        <span class="logo">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                aria-hidden="true"
-                role="img"
-                width="32"
-                height="32"
-                preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 24 24"
-                ><g fill="none"
-                    ><path
-                        d="M10.75 22H4.917a2.086 2.086 0 0 1-2.084-2.084v-9.7a1.977
+<div class="navigation-wrapper" class:active={$state.opened}>
+    <div class="backdrop" on:click={() => state.hide()} />
+    <div class="navigation">
+        <div class="head">
+            <span class="logo">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    aria-hidden="true"
+                    role="img"
+                    width="32"
+                    height="32"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 24 24"
+                    ><g fill="none"
+                        ><path
+                            d="M10.75 22H4.917a2.086 2.086 0 0 1-2.084-2.084v-9.7a1.977
                         1.977 0 0 1-.592-2.558c.9-1.608 1.818-3.193 2.721-4.712A1.976
                         1.976 0 0 1 6.666 2c.424.004.836.139 1.18.385l.024.015c.412.24
                         4.392 2.609 7.591 4.512l2.84 1.688l.13.077a372.255 372.255
@@ -133,50 +141,58 @@
                         0 0 0 2.694-4.667a.316.316 0 0 0-.125-.387c-.127-.076-13.323-7.918-13.408-7.955a.314.314
                         0 0 0-.383.117l-.007.012l-.008.012l-.012.02v.005l-.015.024l-.015.019h.001zm1.353
                         5.49a1.666 1.666 0 1 1 1.667-1.67a1.669 1.669 0 0 1-1.667 1.667v.003z"
-                        fill="currentColor"
-                    /></g
-                ></svg
-            >
-        </span>
-        <span class="name"> Sketch Book </span>
-    </div>
-    <div class="menu">
-        {#each menu as item}
-            {#if item.group}
-                <div class="group" class:opened={item.opened}>
-                    <div class="label" on:click={() => onClick(item)}>
-                        <em>{item.label}</em>
-                    </div>
-                    <div class="items">
-                        {#each item.children as child}
-                            <a
-                                href={child.url}
-                                class:active={child.slug === $active?.slug}
-                                on:click|preventDefault={() => onClick(child)}
-                                >{child.label}</a
-                            >
-                        {/each}
-                    </div>
-                </div>
-            {:else}
-                <a
-                    href={item.url}
-                    class:active={item.slug === $active?.slug}
-                    on:click|preventDefault={() => onClick(item)}
-                    >{item.label}</a
+                            fill="currentColor"
+                        /></g
+                    ></svg
                 >
-            {/if}
-        {/each}
+            </span>
+            <span class="name"> Sketch Book </span>
+        </div>
+        <div class="menu">
+            {#each menu as item}
+                {#if item.group}
+                    <div class="group" class:opened={item.opened}>
+                        <div class="label" on:click={() => onClick(item)}>
+                            <em>{item.label}</em>
+                        </div>
+                        <div class="items">
+                            {#each item.children as child}
+                                <a
+                                    href={child.url}
+                                    class:active={child.slug === $active?.slug}
+                                    on:click|preventDefault={() =>
+                                        onClick(child)}>{child.label}</a
+                                >
+                            {/each}
+                        </div>
+                    </div>
+                {:else}
+                    <a
+                        href={item.url}
+                        class:active={item.slug === $active?.slug}
+                        on:click|preventDefault={() => onClick(item)}
+                        >{item.label}</a
+                    >
+                {/if}
+            {/each}
+        </div>
     </div>
 </div>
 
 <style lang="scss">
+    @import "styles/vars.scss";
+
     $h-bg: #536579;
     $h-color: white;
     $text-color: #d1d0d0;
 
     .navigation {
         color: #d1d0d0;
+        height: 100%;
+        width: 260px;
+        overflow: auto;
+        background: #22344a;
+        box-shadow: 1px 0px 6px 2px rgba(0, 0, 0, 0.3);
 
         & > .head {
             font-weight: bolder;
@@ -275,6 +291,47 @@
                         display: block;
                     }
                 }
+            }
+        }
+    }
+
+    .navigation-wrapper {
+        height: 100%;
+        z-index: 10000;
+
+        & > .backdrop {
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        @include media-max-width(md) {
+            display: none;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            &.active {
+                display: block;
+            }
+
+            & > .navigation {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 1;
+            }
+
+            & > .backdrop {
+                display: block;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 1;
             }
         }
     }

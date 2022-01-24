@@ -1,12 +1,21 @@
 <script lang="ts">
     import { beforeUpdate, onDestroy } from "svelte";
     import type { SvelteComponentDev } from "svelte/internal";
+    import MenuIcon from "./menu-icon.svelte";
 
     export let title = undefined;
     export let page = undefined;
 
     let root: HTMLElement;
     let mounted: SvelteComponentDev;
+
+    /**
+     * Emit a custom event when the menu button is clicked
+     */
+    function onMenuClick() {
+        const event = new CustomEvent("menuClicked");
+        window.document.dispatchEvent(event);
+    }
 
     beforeUpdate(() => {
         if (page && root) {
@@ -28,7 +37,12 @@
 
 <div class="sketch-page">
     {#if title && page}
-        <div class="page-title">{title}</div>
+        <div class="page-title">
+            <div class="title">{title}</div>
+            <div class="menu-icon" on:click={onMenuClick}>
+                <MenuIcon />
+            </div>
+        </div>
         <div class="page-content" bind:this={root} />
     {/if}
 </div>
@@ -106,6 +120,21 @@
             font-size: 2em !important;
             font-weight: bolder;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+
+            & > .title {
+                flex: 1;
+            }
+
+            & > .menu-icon {
+                line-height: 1rem;
+                cursor: pointer;
+
+                @include media-min-width(900px) {
+                    display: none;
+                }
+            }
         }
 
         & > .page-content > h2 {
